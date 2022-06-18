@@ -294,8 +294,12 @@ namespace meteo
 
             OneCallRoot WeatherInfo = JsonSerializer.Deserialize<OneCallRoot>(this.ApiResponse);
 
-            SunRise = new DateTime(WeatherInfo.Current.Sunrise, DateTimeKind.Utc);
-            SunSet = new DateTime(WeatherInfo.Current.Sunset, DateTimeKind.Utc);
+            DateTime epochStart = new DateTime(1970, 1, 1);
+            DateTime tmp1 = epochStart.AddSeconds(WeatherInfo.Current.Sunrise);
+            DateTime tmp2 = epochStart.AddSeconds(WeatherInfo.Current.Sunset);
+
+            SunRise = DateTime.SpecifyKind(tmp1, DateTimeKind.Utc);
+            SunSet = DateTime.SpecifyKind(tmp2, DateTimeKind.Utc);
 
             Console.WriteLine($"SunRise = {SunRise}");
             Console.WriteLine($"SunSet  = {SunSet}");
