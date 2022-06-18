@@ -2,4 +2,4 @@
 REPOSITORY FOR THE LAB 2 IN C#
 
 3 first questions dynamics
-4 question hardcoded
+4, 5 questions hardcoded

@@ -115,9 +115,7 @@ namespace meteo
 
                     case Option.PressureHumidityInCities:
 
-                        Console.WriteLine("[INF]: Option PressureHumidityInCities not implemented!");
-                        Console.WriteLine("<press [enter] to continue>");
-                        Console.ReadLine();                        
+                        PressureHumidityInCities();                        
                         break;
 
                     case Option.Quit:
@@ -444,5 +442,53 @@ namespace meteo
             Console.ReadLine();
 
         }
+
+        public void PressureHumidityInCities() {
+
+            // Kiev: Country = UA, State = , Longitude = 30.5241361, Latitude = 50.4500336
+            // Moscow: Country = RU, State = Moscow, Longitude = 37.6174943, Latitude = 55.7504461
+            // Berlin: Country = DE, State = Berlin, Longitude = 13.3888599, Latitude = 52.5170365
+
+            int counter = 0 ;
+
+            var Cities = new List<City>
+            {
+                new City("kiev",30.5241361,50.4500336),
+                new City("moscow",37.6174943,55.7504461),
+                new City("berlin",13.3888599,52.5170365)
+            };
+
+            string exclude = "minutely,hourly,daily,alerts" ;
+            string units = "metric" ;
+            
+            foreach (var city in Cities) {
+
+                this.waiting = true ;
+
+                CallApi($"https://api.openweathermap.org/data/2.5/onecall?lat={city.Lat}&lon={city.Lon}&exclude={exclude}&appid={this.ApiKey}&units={units}");
+
+                Console.Write("Searching");
+                while (this.waiting) {
+                    //Console.Write(".");
+                }
+
+                Console.WriteLine("");
+                /*
+                Console.WriteLine("result: ");
+                Console.WriteLine(this.ApiResponse);
+                */
+
+                OneCallRoot WeatherInfo = JsonSerializer.Deserialize<OneCallRoot>(this.ApiResponse);
+
+                Console.WriteLine($"City = {city.Name}, Humidity = {WeatherInfo.Current.Humidity}, Pressure = {WeatherInfo.Current.Pressure}");
+                
+
+            }
+
+            Console.WriteLine("<press [enter] to exit>");
+            Console.ReadLine();
+
+        }
+    
     }
 }
